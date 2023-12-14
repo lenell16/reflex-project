@@ -1,0 +1,27 @@
+version: '3.8'
+services:
+  app:
+    build: .
+    ports:
+      - '3000:3000'
+    environment:
+      - NODE_ENV=development
+      - MONGO_URI=mongodb://mongo:27017/mydb
+      - GOOGLE_APPLICATION_CREDENTIALS=/tmp/application_default_credentials.json
+    depends_on:
+      - mongo
+    volumes:
+      - ~/.config/gcloud/application_default_credentials.json:/tmp/application_default_credentials.json:ro
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    command: npm run start:dev
+  mongo:
+    container_name: mongo
+    image: mongo
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongo-data:/data/db
+
+volumes:
+  mongo-data:
